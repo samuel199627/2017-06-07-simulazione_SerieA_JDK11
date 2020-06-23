@@ -4,6 +4,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import it.polito.tdp.seriea.model.Model;
+import it.polito.tdp.seriea.model.Season;
+import it.polito.tdp.seriea.model.Team;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
@@ -20,22 +22,39 @@ public class FXMLController {
     private URL location;
 
     @FXML
-    private ChoiceBox<?> boxSeason;
+    private ChoiceBox<Season> boxSeason;
 
     @FXML
-    private ChoiceBox<?> boxTeam;
+    private ChoiceBox<Team> boxTeam;
 
     @FXML
     private TextArea txtResult;
 
     @FXML
     void handleCarica(ActionEvent event) {
-
+    	txtResult.clear();
+    	Season selezionata=boxSeason.getValue();
+    	if(selezionata==null) {
+    		txtResult.appendText("DEVI SELEZIONARE UNA STAGIONE");
+    		return;
+    	}
+    	
+    	txtResult.appendText(model.creaGrafo(selezionata));
+    	
+    	boxTeam.getItems().clear();
+    	boxTeam.getItems().addAll(model.vertici());
     }
 
     @FXML
     void handleDomino(ActionEvent event) {
-
+    	txtResult.clear();
+    	Team selezionato=boxTeam.getValue();
+    	if(selezionato==null) {
+    		txtResult.appendText("DEVI SELEZIONARE UNA SQUADRA");
+    		return;
+    	}
+    	txtResult.appendText(model.ricorsione(selezionato));
+    	
     }
 
     @FXML
@@ -48,5 +67,7 @@ public class FXMLController {
 
 	public void setModel(Model model) {
 		this.model = model;
+		boxSeason.getItems().clear();
+		boxSeason.getItems().addAll(model.caricaStagioni());
 	}
 }
