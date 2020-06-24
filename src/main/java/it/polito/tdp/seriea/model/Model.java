@@ -107,7 +107,12 @@ public class Model {
 	}
 	
 	public void cerca(List<Partita> parziale, int livello) {
-		
+		if(parziale.size()>bestLunghezza) {
+			//System.out.println("TROVATO MASSSIMO "+bestLunghezza);
+			bestLunghezza=parziale.size();
+			soluzione=new ArrayList<>(parziale);
+			
+		}
 		if(livello==0) {
 			//provo a partire con un qualunque vertice dei grafo e prendere una partita in cui ha vinto
 			/*
@@ -148,19 +153,14 @@ public class Model {
 			Team nuovaPartenza=parziale.get(parziale.size()-1).getTrasfera();
 			
 			for(DefaultWeightedEdge e: grafo.outgoingEdgesOf(nuovaPartenza)) {
-				if(grafo.getEdgeWeight(e)==1 && !parziale.contains(new Partita(nuovaPartenza,grafo.getEdgeTarget(e)))) {
+				if(grafo.getEdgeWeight(e)==1 && !parziale.contains(new Partita(nuovaPartenza,grafo.getEdgeTarget(e)))&&parziale.size()<7) {
 					parziale.add(new Partita(nuovaPartenza,grafo.getEdgeTarget(e)));
 					cerca(parziale,livello+1);
 					parziale.remove(parziale.size()-1);
 				}
 			}
 		}
-		if(parziale.size()>bestLunghezza) {
-			System.out.println("TROVATO MASSSIMO "+bestLunghezza);
-			bestLunghezza=parziale.size();
-			soluzione=new ArrayList<>(parziale);
-			
-		}
+		
 	}
 	
 	public boolean parzialeContiene(List<Partita> parziale,Team cas, Team trasf) {
